@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment
+.venv/
+env/
+*.env
+
+# OS
+.DS_Store
+
+# Data outputs
+frames/
+videos/
+results/
+captions/
+
+# Model caches
+.cache/
+huggingface/
