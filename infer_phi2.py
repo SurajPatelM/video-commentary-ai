@@ -21,7 +21,7 @@ summ_model = T5ForConditionalGeneration.from_pretrained(summ_model_name)
 summ_model.eval()
 
 # === Use CPU only for safety ===
-device = torch.device("cpu")
+device = torch.device("mps")
 phi_model.to(device)
 summ_model.to(device)
 
@@ -76,5 +76,5 @@ def run_inference(caption_file):
 if __name__ == "__main__":
     for caption_file in os.listdir(CAPTION_DIR):
         if caption_file.endswith(".json"):
-            print(f"🧠 Generating commentary for {caption_file}")
+            print(f"Generating commentary for {caption_file}")
             run_inference(os.path.join(CAPTION_DIR, caption_file))

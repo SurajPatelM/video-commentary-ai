@@ -19,3 +19,5 @@ captions/
 # Model caches
 .cache/
 huggingface/
+*.pt
+caption_lora
