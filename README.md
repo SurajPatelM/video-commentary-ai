@@ -19,3 +19,8 @@ This project generates detailed commentary for instructional videos using keyfra
 ### Preprocessing (frames + captions)
 ```bash
 python preprocessing.py
+```
+### Dataloader based on captions, frames, videos folders
+```bash
+python dataloader.py
+```
