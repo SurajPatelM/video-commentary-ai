@@ -73,7 +73,7 @@ def generate_caption(image_path, weights_path="captioning_model.pt"):
     with torch.no_grad():
         generated_ids = model(pixel_values, generate_kwargs)
         caption = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
-
+        print(caption)
     return caption, image
 
 
