@@ -43,17 +43,15 @@ class LitMultiModalModule(L.LightningModule):
         input_ids = tokenized.input_ids
         attention_mask = tokenized.attention_mask
 
-        _, logits = self.forward(images, tokenized, attention_mask)
-        print(logits.shape)
-        target_len = input_ids.shape[1]
-        logits = logits[:, :96, :]
-        print(logits.shape)
-        # print(logits.view(-1, logits.size(-1)).shape)
-        print(input_ids.contiguous().view(-1).shape)
-        loss = self.loss_fn(logits.view(-1, logits.size(-1)), input_ids.contiguous().view(-1))
+        loss, _ = self.forward(
+            image_inputs=images,
+            text_inputs=tokenized,
+            attention_mask=attention_mask,
+            labels=input_ids
+        )
+
         self.log("train_loss", loss, prog_bar=True)
         return loss
-        
 
     def validation_step(self, batch, batch_idx):
         images, captions = batch
@@ -62,7 +60,12 @@ class LitMultiModalModule(L.LightningModule):
         input_ids = tokenized.input_ids
         attention_mask = tokenized.attention_mask
 
-        loss, _ = self.forward(images, tokenized, attention_mask=attention_mask, labels=input_ids)
+        loss, _ = self.forward(
+            image_inputs=images,
+            text_inputs=tokenized,
+            attention_mask=attention_mask,
+            labels=input_ids
+        )
 
         self.log("val_loss", loss, prog_bar=True)
 

@@ -35,12 +35,12 @@ class MultiModalModel(nn.Module):
 
     def forward(self, text_inputs, image_inputs, decoder_attention_mask=None, labels=None):
         text_embed = self.text_encoder(text_inputs)
-        print(text_embed.shape)
+        # print(text_embed.shape)
         vision_embed = self.vision_encoder(image_inputs)
-        print(vision_embed.shape)
+        # print(vision_embed.shape)
 
         fused = self.fusion(text_embed, vision_embed)
-        print(fused.shape)
+        # print(fused.shape)
 
         text_attention = text_inputs['attention_mask']
         vision_attention = torch.ones(vision_embed.shape[:2], dtype=torch.long).to(vision_embed.device)

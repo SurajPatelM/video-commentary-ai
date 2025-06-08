@@ -59,6 +59,24 @@ class Decoder(nn.Module):
         return param_info
 
     def forward(self, x, attention_mask=None, labels=None):
-        projected = self.linear_projection(x)
-        outputs = self.model(inputs_embeds=projected, attention_mask=attention_mask, labels=labels)
+        projected = self.linear_projection(x)  # (B, T_proj, D)
+
+        if labels is not None:
+            if projected.size(1) != labels.size(1):
+                if projected.size(1) > labels.size(1):
+                    pad_len = projected.size(1) - labels.size(1)
+                    labels = torch.cat([
+                        labels, 
+                        torch.full((labels.size(0), pad_len), -100, device=labels.device)
+                    ], dim=1)
+                else:
+                    labels = labels[:, :projected.size(1)]
+
+        outputs = self.model(
+            inputs_embeds=projected,
+            attention_mask=attention_mask,
+            labels=labels
+        )
+
+        print(f"logits shape: {outputs.logits.shape}, loss: {outputs.loss}")
         return outputs.loss, outputs.logits

@@ -30,15 +30,15 @@ decoder_cfg:
 trainer:
   precision: 32
   accelerator: auto
-  devices: 1
+  devices: 2
   batch_size: 4
   lr: 1e-5
   device: mps
-  epochs: 3
+  epochs: 1
 
 data:
   captions_dir: captions
   frames_dir: frames
-  batch_size: 4
+  batch_size: 8
   num_workers: 4
   pin_memory: true
