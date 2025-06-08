@@ -8,7 +8,7 @@ from transformers import (
     get_scheduler,
 )
 from transformers.modeling_outputs import BaseModelOutput
-from dataloader import get_loaders
+from data.dataloader import get_loaders
 import evaluate
 
 # === Device ===
@@ -84,6 +84,8 @@ for batch in tqdm(test_loader, desc="Evaluating"):
     reference_texts = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
     predictions.extend(generated_texts)
+    print(generated_texts)
+    print()
     references.extend(reference_texts)
 
 # === Evaluate Metrics ===

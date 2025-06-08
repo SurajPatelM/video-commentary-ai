@@ -5,6 +5,7 @@ from PIL import Image
 from torchvision import transforms
 from transformers import AutoTokenizer, AutoModelForCausalLM, CLIPModel
 import matplotlib.pyplot as plt
+from time import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
@@ -79,9 +80,11 @@ def generate_caption(image_path, weights_path="captioning_model.pt"):
 
 if __name__ == "__main__":
     import sys
+    st = time()
     image_path = sys.argv[1] if len(sys.argv) > 1 else "frames/NR 224 NG tube insertion and removal_clip_0.0s_to_560.0s/frame_0020.jpg"
     caption, image = generate_caption(image_path)
-
+    end = time()
+    print("Time taken to predict a frame:", end - st)
     # === Display image and caption ===
     plt.imshow(image)
     plt.axis("off")

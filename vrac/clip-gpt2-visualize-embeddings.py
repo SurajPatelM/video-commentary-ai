@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, CLIPModel
 from torchvision import transforms
 import torch.nn as nn
 from tqdm import tqdm
-from dataloader import get_loaders
+from data.dataloader import get_loaders
 import matplotlib.cm as cm
 from collections import defaultdict
 

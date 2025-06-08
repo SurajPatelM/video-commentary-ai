@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from transformers import CLIPModel, T5Tokenizer, T5ForConditionalGeneration, get_scheduler
-from dataloader import get_loaders
+from data.dataloader import get_loaders
 from tqdm import tqdm
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")

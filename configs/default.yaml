@@ -1,0 +1,44 @@
+defaults:
+  - _self_
+
+text_encoder_cfg:
+  encoder: bert-base-uncased
+  lora: true
+  input_dim: 768     # BERT's hidden size
+  output_dim: 768
+  freeze: false
+
+vision_encoder_cfg:
+  encoder: google/vit-base-patch16-224-in21k
+  lora: false
+  input_dim: 768     # ViT's patch embedding size
+  output_dim: 768
+  freeze: false
+
+fusion_cfg:
+  fusion_type: concat
+  input_dim: 768      # Optional: only used if projecting embeddings after concat
+  output_dim: 768
+
+decoder_cfg:
+  decoder: gpt2
+  lora: true
+  input_dim: 768      # Match fusion output_dim
+  output_dim: 768
+  freeze: false
+
+trainer:
+  precision: 32
+  accelerator: auto
+  devices: 1
+  batch_size: 4
+  lr: 1e-5
+  device: mps
+  epochs: 3
+
+data:
+  captions_dir: captions
+  frames_dir: frames
+  batch_size: 4
+  num_workers: 4
+  pin_memory: true

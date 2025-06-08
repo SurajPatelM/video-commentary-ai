@@ -10,7 +10,7 @@ from transformers import (
     T5Tokenizer,
 )
 from transformers.modeling_outputs import BaseModelOutput
-from dataloader import get_loaders
+from data.dataloader import get_loaders
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
@@ -116,6 +116,16 @@ t5_preds = t5_tokenizer.batch_decode(t5_outputs, skip_special_tokens=True)
 
 gpt2_refs = gpt2_tokenizer.batch_decode(gpt2_labels, skip_special_tokens=True)
 t5_refs = t5_tokenizer.batch_decode(t5_labels, skip_special_tokens=True)
+
+# === Visualization ===
+for i in range(min(6, len(pixel_values))):
+    img = to_pil_image(pixel_values[i])  # Fixed: Use pixel_values instead of gpt2_batch
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.imshow(img)
+    ax.axis("off")
+    ax.set_title(f"Ref:  {gpt2_refs[i]}\nGPT2: {gpt2_preds[i]}\nT5:   {t5_preds[i]}", fontsize=8)
+    plt.tight_layout()
+    plt.show()
 
 # === Visualization ===
 for i in range(min(6, len(pixel_values))):

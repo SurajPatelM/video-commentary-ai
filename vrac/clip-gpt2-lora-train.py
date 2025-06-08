@@ -2,9 +2,9 @@
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer, CLIPModel
-from transformers import get_scheduler
-from dataloader import get_loaders
+from transformers import AutoModelForCausalLM, AutoTokenizer, CLIPModel, get_scheduler
+from peft import get_peft_model, LoraConfig
+from data.dataloader import get_loaders
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
@@ -12,7 +12,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 class ImagePrefixCaptioner(nn.Module):
     def __init__(self, vision_model, language_model, proj_dim):
         super().__init__()
-        self.vision_encoder = vision_model.vision_model
+        self.vision_encoder = vision_model.vision_model.eval()  # Freeze CLIP
+        for p in self.vision_encoder.parameters():
+            p.requires_grad = False
+
         self.language_model = language_model
         self.proj = nn.Linear(self.vision_encoder.config.hidden_size, proj_dim)
 
@@ -43,9 +46,23 @@ def train():
     tokenizer = AutoTokenizer.from_pretrained("distilgpt2")
     tokenizer.pad_token = tokenizer.eos_token
 
-    language_model = AutoModelForCausalLM.from_pretrained("distilgpt2")
+    base_model = AutoModelForCausalLM.from_pretrained("distilgpt2")
+
+    # === Apply LoRA ===
+    lora_config = LoraConfig(
+        r=8,
+        lora_alpha=16,
+        target_modules=["c_attn", "c_proj"],
+        lora_dropout=0.05,
+        bias="none",
+        task_type="CAUSAL_LM"
+    )
+    language_model = get_peft_model(base_model, lora_config)
+
+    # === Load and freeze CLIP ===
     vision_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 
+    # === Combine into captioner ===
     model = ImagePrefixCaptioner(
         vision_model=vision_model,
         language_model=language_model,
@@ -63,7 +80,7 @@ def train():
     # === Training loop ===
     model.train()
     for epoch in range(3):
-        print("Epcoh :")
+        print(f"\nEpoch {epoch + 1}")
         total_loss = 0
         for batch in tqdm(train_loader):
             pixel_values = batch["pixel_values"].to(device)
@@ -87,8 +104,9 @@ def train():
         avg_loss = total_loss / len(train_loader)
         print(f"Epoch {epoch+1} | Loss: {avg_loss:.4f}")
 
-    # === Save model ===
-    torch.save(model.state_dict(), "captioning_model.pt")
+    # === Save only LoRA-adapted decoder ===
+    model.language_model.save_pretrained("caption_lora")
+    print("✅ LoRA model saved at: caption_lora")
 
 
 if __name__ == "__main__":

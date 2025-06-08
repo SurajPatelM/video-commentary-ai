@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM, CLIPModel
-from dataloader import get_loaders
+from data.dataloader import get_loaders
 from transformers import logging
 import evaluate
 

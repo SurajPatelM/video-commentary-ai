@@ -21,3 +21,7 @@ captions/
 huggingface/
 *.pt
 caption_lora
+
+
+lightning_logs
+outputs
