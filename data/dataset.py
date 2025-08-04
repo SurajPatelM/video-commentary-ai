@@ -1,5 +1,6 @@
 import os
 import json
+import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
@@ -31,6 +32,48 @@ class VideoCaptionDataset(Dataset):
                 frame_caption_map = json.load(f)
 
             for frame_id, caption in frame_caption_map.items():
+                image_path = os.path.join(frames_dir, video_name, f"{frame_id}")
+                if os.path.exists(image_path):
+                    self.data.append((image_path, caption))
+                else:
+                    print(f"Warning: Missing image {image_path}")
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        image_path, caption = self.data[idx]
+        image = Image.open(image_path).convert("RGB")
+        image = self.transform(image)
+        return image, caption
+
+
+class VideoCaptionDatasetCSV(Dataset):
+    def __init__(self, captions_dir, frames_dir, transform=None):
+        """
+        Args:
+            captions_dir (str): Path to the directory with CSV caption files.
+            frames_dir (str): Path to the directory with frame subdirectories.
+            transform (callable, optional): Optional transform to be applied on an image.
+        """
+        self.captions_dir = captions_dir
+        self.frames_dir = frames_dir
+        self.transform = transform or transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor()
+        ])
+
+        self.data = [] 
+
+        for csv_file in os.listdir(captions_dir):
+            if not csv_file.endswith(".csv"):
+                continue
+            video_name = os.path.splitext(csv_file)[0]
+            csv_path = os.path.join(captions_dir, csv_file)
+            df = pd.read_csv(csv_path)
+            for frame_num, row in df.iterrows():
+                frame_id = f"frame_{str(frame_num).zfill(4)}.jpg"
+                caption = row['caption']
                 image_path = os.path.join(frames_dir, video_name, f"{frame_id}")
                 if os.path.exists(image_path):
                     self.data.append((image_path, caption))

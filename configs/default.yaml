@@ -34,10 +34,10 @@ trainer:
   batch_size: 4
   lr: 1e-5
   device: mps
-  epochs: 1
+  epochs: 5
 
 data:
-  captions_dir: captions
+  captions_dir: captions_csv
   frames_dir: frames
   batch_size: 8
   num_workers: 4
