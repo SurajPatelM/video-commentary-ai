@@ -2,12 +2,12 @@ import hydra
 from omegaconf import DictConfig
 from lightning import Trainer
 from torch.utils.data import DataLoader
-from data.dataset import VideoCaptionDataset
+from data.dataset import VideoCaptionDataset, VideoCaptionDatasetCSV
 from train.train import LitMultiModalModule
 
 @hydra.main(config_path="configs", config_name="default", version_base="1.3")
 def main(cfg: DictConfig):
-    dataset = VideoCaptionDataset(captions_dir=cfg.data.captions_dir, frames_dir=cfg.data.frames_dir)
+    dataset = VideoCaptionDatasetCSV(captions_dir=cfg.data.captions_dir, frames_dir=cfg.data.frames_dir)
     dataloader = DataLoader(dataset, batch_size=cfg.trainer.batch_size, shuffle=True)
 
     model = LitMultiModalModule(

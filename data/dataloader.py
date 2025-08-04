@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from data.dataset import VideoCaptionDataset
+from data.dataset import VideoCaptionDataset, VideoCaptionDatasetCSV
 
 def build_dataloader(cfg, split="train"):
     """
@@ -10,7 +10,7 @@ def build_dataloader(cfg, split="train"):
     Returns:
         PyTorch DataLoader instance
     """
-    dataset = VideoCaptionDataset(
+    dataset = VideoCaptionDatasetCSV(
         captions_dir=cfg.data.captions_dir,
         frames_dir=cfg.data.frames_dir
     )
