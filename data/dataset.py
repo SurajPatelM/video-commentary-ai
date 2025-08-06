@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+import torch
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
@@ -60,7 +61,8 @@ class VideoCaptionDatasetCSV(Dataset):
         self.frames_dir = frames_dir
         self.transform = transform or transforms.Compose([
             transforms.Resize((224, 224)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
         self.data = [] 
@@ -87,4 +89,20 @@ class VideoCaptionDatasetCSV(Dataset):
         image_path, caption = self.data[idx]
         image = Image.open(image_path).convert("RGB")
         image = self.transform(image)
-        return image, caption
+        return {"images" : image, "captions": caption}
+    
+    def collate_fn(batch):
+        # Create empty lists to hold images and captions
+        images = []
+        captions = []
+
+        for item in batch:
+            images.append(item["images"])  # Each item is a dictionary, so access by key
+            captions.append(item["captions"])
+
+        # Stack the images into a batch of shape (B, 3, H, W)
+        images = torch.stack(images)  # Convert list of tensors to a single tensor
+
+        # For captions, since they are text, we just return a list of captions
+        # You can also tokenize them here if needed using a tokenizer (e.g., for sequence models)
+        return {"images":  torch.tensor(images, dtype = torch.float32), "captions": captions}

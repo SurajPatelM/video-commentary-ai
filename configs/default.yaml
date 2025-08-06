@@ -9,10 +9,10 @@ text_encoder_cfg:
   freeze: false
 
 vision_encoder_cfg:
-  encoder: google/vit-base-patch16-224-in21k
+  encoder: swin_base_patch4_window7_224
   lora: false
   input_dim: 768     # ViT's patch embedding size
-  output_dim: 768
+  output_dim: 1000
   freeze: false
 
 fusion_cfg:
@@ -21,7 +21,7 @@ fusion_cfg:
   output_dim: 768
 
 decoder_cfg:
-  decoder: gpt2
+  decoder: facebook/bart-large
   lora: true
   input_dim: 768      # Match fusion output_dim
   output_dim: 768
@@ -29,16 +29,22 @@ decoder_cfg:
 
 trainer:
   precision: 32
-  accelerator: auto
+  accelerator: mps
   devices: 2
   batch_size: 4
   lr: 1e-5
   device: mps
   epochs: 5
 
+  max_seq_length: 128
+  mlm_probability: 0.15
+  output_dir: ./mlm_checkpoints
+  save_steps: 500
+  logging_steps: 100
+
 data:
-  captions_dir: captions_csv
-  frames_dir: frames
-  batch_size: 8
+  captions_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/captions_csv
+  frames_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames
+  batch_size: 3
   num_workers: 4
   pin_memory: true
