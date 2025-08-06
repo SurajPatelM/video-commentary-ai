@@ -1,23 +1,19 @@
+import torch
 import hydra
 from omegaconf import DictConfig
 from lightning import Trainer
 from torch.utils.data import DataLoader
 from data.dataset import VideoCaptionDataset, VideoCaptionDatasetCSV
-from train.train import LitMultiModalModule
+# from train.train import LitMultiModalModule
+from models.baseline_swin_bart import SwinBartLightning
 
-@hydra.main(config_path="configs", config_name="default", version_base="1.3")
+@hydra.main(config_path="configs", config_name="default")
 def main(cfg: DictConfig):
+    if torch.backends.mps.is_available():
+        torch.mps.empty_cache()
     dataset = VideoCaptionDatasetCSV(captions_dir=cfg.data.captions_dir, frames_dir=cfg.data.frames_dir)
-    dataloader = DataLoader(dataset, batch_size=cfg.trainer.batch_size, shuffle=True)
-
-    model = LitMultiModalModule(
-        text_encoder_cfg = cfg.text_encoder_cfg,
-        vision_encoder_cfg = cfg.vision_encoder_cfg,
-        fusion_cfg=cfg.fusion_cfg,
-        decoder_cfg=cfg.decoder_cfg,
-        lr=cfg.trainer.lr
-    )
-
+    dataloader = DataLoader(dataset, batch_size=cfg.trainer.batch_size, shuffle= False, pin_memory=True)
+    model = SwinBartLightning(cfg)
     trainer = Trainer(
         accelerator=cfg.trainer.device,
         devices=1,
