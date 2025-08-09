@@ -4,19 +4,21 @@ from omegaconf import DictConfig
 from models.model import SwinBart
 from PIL import Image
 from torchvision import transforms
+import os
 
 @hydra.main(config_path="configs", config_name="default")
 def inference(cfg: DictConfig):
     # Set device
-    device = torch.device(cfg.trainer.device if torch.cuda.is_available() else "cpu")
+    device = torch.device(cfg.trainer.device)
 
     # Initialize and load model
     model = SwinBart(cfg).to(device)
+    model.load_state_dict(torch.load("/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/checkpoints/best_model.pth", map_location=device))
     model.eval()
 
     # Image preprocessing
     transform = transforms.Compose([
-        transforms.Resize((cfg.data.image_size, cfg.data.image_size)),
+        transforms.Resize((cfg.inference.image_size, cfg.inference.image_size)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
     ])

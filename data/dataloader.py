@@ -20,7 +20,7 @@ def build_dataloader(cfg, split="train"):
         batch_size=cfg.trainer.batch_size,
         shuffle=(split == "train"),
         num_workers=cfg.training.num_workers if "num_workers" in cfg.training else 2,
-        pin_memory=True
+        # pin_memory=True
     )
     return dataloader
 
@@ -43,6 +43,6 @@ def build_swin_dataloader(cfg):
         batch_size=cfg.trainer.batch_size,
         shuffle=False,
         num_workers=cfg.training.num_workers if "num_workers" in cfg.training else 2,
-        pin_memory=True
+        # pin_memory=True
     )
     return dataloader

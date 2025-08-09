@@ -30,7 +30,7 @@ decoder_cfg:
 
 trainer:
   precision: 32
-  accelerator: cpu
+  accelerator: mps
   devices: 2
   batch_size: 4
   lr: 1e-5
@@ -47,7 +47,7 @@ data:
   frames_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames
   batch_size: 3
   num_workers: 4
-  pin_memory: true
+  pin_memory: false
 
 inference:
   batch_size: 1
@@ -58,4 +58,5 @@ inference:
   top_p: 0.95
   temperature: 1.0
   image_size: 224
+  num_beams: 5
   image_path: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0085.jpg

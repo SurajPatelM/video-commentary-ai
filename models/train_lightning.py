@@ -2,6 +2,7 @@ import os
 import torch
 import lightning as L
 from models.model import SwinBart
+import os
 
 class TrainerModule(L.LightningModule):
     def __init__(self, cfg):
@@ -9,7 +10,7 @@ class TrainerModule(L.LightningModule):
         self.cfg = cfg
         self.model = SwinBart(cfg)
         self.best_val_loss = float("inf")  # initialize best loss
-        self.save_path = os.path.join(cfg.trainer.output_dir, "best_model.ckpt")
+        self.save_path = os.path.join(cfg.trainer.output_dir, "best_model.pth")
 
     def forward(self, images, captions):
         return self.model(images, captions)
@@ -30,7 +31,7 @@ class TrainerModule(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=self.cfg.trainer.lr)
+        return torch.optim.AdamW(self.model.parameters(), lr=self.cfg.trainer.lr)
 
     def on_validation_end(self):
         val_loss = self.trainer.callback_metrics.get("val_loss")
@@ -42,4 +43,4 @@ class TrainerModule(L.LightningModule):
 
     def _save_best_model(self):
         print(f"🔍 New best model found with val_loss = {self.best_val_loss:.4f}. Saving to {self.save_path}")
-        self.trainer.save_checkpoint(self.save_path)
+        torch.save(self.model.state_dict(), self.save_path)
