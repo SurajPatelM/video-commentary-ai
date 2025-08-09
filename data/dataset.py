@@ -105,4 +105,4 @@ class VideoCaptionDatasetCSV(Dataset):
 
         # For captions, since they are text, we just return a list of captions
         # You can also tokenize them here if needed using a tokenizer (e.g., for sequence models)
-        return {"images":  torch.tensor(images, dtype = torch.float32), "captions": captions}
+        return {"images":  torch.tensor(images), "captions": captions}
