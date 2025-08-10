@@ -9,10 +9,10 @@ text_encoder_cfg:
   freeze: false
 
 vision_encoder_cfg:
-  encoder: swin_base_patch4_window7_224
+  encoder: openai/clip-vit-base-patch32
   lora: false
   input_dim: 768     # ViT's patch embedding size
-  output_dim: 1000
+  output_dim: 768
   freeze: false
 
 fusion_cfg:
@@ -21,7 +21,7 @@ fusion_cfg:
   output_dim: 768
 
 decoder_cfg:
-  decoder: facebook/bart-base
+  decoder: distilgpt2
   lora: true
   input_dim: 768      # Match fusion output_dim
   hidden_dim: 768

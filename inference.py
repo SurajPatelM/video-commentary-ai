@@ -1,7 +1,7 @@
 import torch
 import hydra
 from omegaconf import DictConfig
-from models.model import SwinBart
+from models.model import CLIPGPT2
 from PIL import Image
 from torchvision import transforms
 import os
@@ -12,7 +12,7 @@ def inference(cfg: DictConfig):
     device = torch.device(cfg.trainer.device)
 
     # Initialize and load model
-    model = SwinBart(cfg).to(device)
+    model = CLIPGPT2(cfg).to(device)
     model.load_state_dict(torch.load("/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/checkpoints/best_model.pth", map_location=device))
     model.eval()
 

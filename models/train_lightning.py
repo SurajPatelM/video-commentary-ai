@@ -20,7 +20,6 @@ class TrainerModule(L.LightningModule):
         outputs = self(images, captions)
         loss = outputs.loss
         self.log("train_loss", loss)
-        self._save_best_model()
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -28,6 +27,7 @@ class TrainerModule(L.LightningModule):
         outputs = self(images, captions)
         loss = outputs.loss
         self.log("val_loss", loss, prog_bar=True)
+        self._save_best_model()
         return loss
 
     def configure_optimizers(self):
