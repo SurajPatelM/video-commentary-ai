@@ -9,6 +9,8 @@ class TrainerModule(L.LightningModule):
         self.cfg = cfg
         self.model = SwinBart(cfg)
         self.best_val_loss = float("inf")
+        self._improved_this_epoch = False
+        self._best_state_dict = None  
         self.save_path = os.path.join(cfg.trainer.output_dir, "best_model.pth")
         os.makedirs(cfg.trainer.output_dir, exist_ok=True)  # ensure dir exists
 
@@ -36,7 +38,18 @@ class TrainerModule(L.LightningModule):
             val_value = float(val_loss.item())
             if val_value < self.best_val_loss:
                 self.best_val_loss = val_value
-                self._save_best_model()
+                self._improved_this_epoch = True
+                self._best_state_dict = {k: v.detach().cpu().clone()
+                                     for k, v in self.model.state_dict().items()}
+
+    def on_train_epoch_end(self):
+        # save at most once per training epoch
+        print(f"[Epoch {self.current_epoch}] epoch end hook called")
+        if self._improved_this_epoch and self._best_state_dict is not None:
+            print(f"New best model with val_loss = {self.best_val_loss:.4f}. Saving to {self.save_path}")
+            torch.save(self._best_state_dict, self.save_path)
+            self._improved_this_epoch = False
+            self._best_state_dict = None
 
     def configure_optimizers(self):
         return torch.optim.AdamW(self.model.parameters(), lr=self.cfg.trainer.lr)
