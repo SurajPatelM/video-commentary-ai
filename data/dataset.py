@@ -46,7 +46,15 @@ class VideoCaptionDataset(Dataset):
         image_path, caption = self.data[idx]
         image = Image.open(image_path).convert("RGB")
         image = self.transform(image)
-        return image, caption
+        # Return the same structure as the CSV dataset
+        return {"images": image, "captions": caption}
+
+    @staticmethod
+    def collate_fn(batch):
+        import torch
+        images = torch.stack([b["images"] for b in batch])  # (B, 3, H, W)
+        captions = [b["captions"] for b in batch]
+        return {"images": images, "captions": captions}
 
 
 class VideoCaptionDatasetCSV(Dataset):
@@ -91,18 +99,10 @@ class VideoCaptionDatasetCSV(Dataset):
         image = self.transform(image)
         return {"images" : image, "captions": caption}
     
+    @staticmethod
     def collate_fn(batch):
-        # Create empty lists to hold images and captions
-        images = []
-        captions = []
-
-        for item in batch:
-            images.append(item["images"])  # Each item is a dictionary, so access by key
-            captions.append(item["captions"])
-
-        # Stack the images into a batch of shape (B, 3, H, W)
-        images = torch.stack(images)  # Convert list of tensors to a single tensor
-
-        # For captions, since they are text, we just return a list of captions
-        # You can also tokenize them here if needed using a tokenizer (e.g., for sequence models)
-        return {"images":  torch.tensor(images), "captions": captions}
+        import torch
+        images = torch.stack([b["images"] for b in batch])  # already tensors
+        captions = [b["captions"] for b in batch]
+        # DO NOT wrap with torch.tensor(...) again — it's already a tensor
+        return {"images": images, "captions": captions}
