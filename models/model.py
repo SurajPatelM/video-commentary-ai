@@ -30,3 +30,27 @@ class SwinBart(nn.Module):
             num_beams=num_beams
         )
         return generated_ids
+    
+class CLIPGPT2(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.encoder = VisionEncoder(
+            encoder_name=cfg.vision_encoder_cfg.encoder,
+            output_dim=cfg.vision_encoder_cfg.output_dim,      # 1024 for CLIP ViT-B/32
+            projection_dim=cfg.decoder_cfg.hidden_dim          # 768 for GPT2
+        )
+        self.decoder = TextDecoder(
+            decoder_name=cfg.decoder_cfg.decoder               # e.g. "distilgpt2"
+        )
+
+    def forward(self, images, captions):
+        image_features = self.encoder(images)
+        return self.decoder(image_features, captions)
+
+    def generate(self, images, max_length=128, num_beams=4):
+        image_features = self.encoder(images)
+        return self.decoder.generate(
+            image_embeddings=image_features,
+            max_length=max_length,
+            num_beams=num_beams
+        )
