@@ -22,11 +22,12 @@ class TextDecoder(nn.Module):
         repeated_embeddings = image_embeddings.unsqueeze(1).repeat(1, seq_len, 1).to(self.device)
 
         # Forward through BART
+        encoder_outputs = BaseModelOutput(last_hidden_state=repeated_embeddings)
         outputs = self.bart_model(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            labels=input_ids,
-            encoder_outputs=(repeated_embeddings, ),
+            labels=input_ids.to(self.device),
+            encoder_outputs=encoder_outputs,
         )
         return outputs
     def generate(self, image_embeddings, max_length=128, num_beams=4):
