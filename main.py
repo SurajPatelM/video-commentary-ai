@@ -2,26 +2,20 @@ import torch
 import hydra
 from omegaconf import DictConfig
 from lightning import Trainer as LTrainer
-from torch.utils.data import DataLoader
-from data.dataset import VideoCaptionDatasetCSV
+
+from data.datamodule import VideoDataModule
 from models.train_lightning import TrainerModule
+
 
 @hydra.main(config_path="configs", config_name="default")
 def main(cfg: DictConfig):
+    # Clear MPS cache if available
     if torch.backends.mps.is_available():
         torch.mps.empty_cache()
 
-    # Dataset and Dataloader
-    dataset = VideoCaptionDatasetCSV(
-        captions_dir=cfg.data.captions_dir,
-        frames_dir=cfg.data.frames_dir
-    )
-    dataloader = DataLoader(
-        dataset,
-        batch_size=cfg.trainer.batch_size,
-        shuffle=False,
-        pin_memory=True
-    )
+    # DataModule (handles dataset + dataloaders)
+    datamodule = VideoDataModule(cfg)
+    datamodule.setup(stage="train")
 
     # Model
     model = TrainerModule(cfg)
@@ -29,13 +23,15 @@ def main(cfg: DictConfig):
     # Lightning Trainer
     trainer = LTrainer(
         accelerator=cfg.trainer.accelerator,
-        devices=1,
+        devices=cfg.trainer.devices,
         max_epochs=cfg.trainer.epochs,
-        precision=32
+        precision=cfg.trainer.precision,
+        default_root_dir=cfg.trainer.output_dir,
     )
 
     # Training
-    trainer.fit(model, dataloader)
+    trainer.fit(model, datamodule=datamodule)
+
 
 if __name__ == "__main__":
     main()
