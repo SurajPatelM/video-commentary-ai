@@ -11,10 +11,13 @@ env/
 .DS_Store
 
 # Data outputs
+frames_dup/
+temp/
 frames/
 videos/
 results/
 captions/
+mfccs/
 
 # Model caches
 .cache/
