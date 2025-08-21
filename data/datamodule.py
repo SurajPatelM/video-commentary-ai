@@ -16,7 +16,8 @@ class VideoDataModule(pl.LightningDataModule):
         if self.cfg.data.use_csv:
             self.dataset = VideoCaptionDatasetCSV(
                 captions_dir=d.captions_dir,
-                frames_dir=d.frames_dir
+                frames_dir=d.frames_dir,
+                audio_dir=d.audio_dir,
             )
         else:
             self.dataset = VideoCaptionDataset(
