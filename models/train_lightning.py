@@ -58,7 +58,7 @@ class TrainerModule(L.LightningModule):
         archive_path = os.path.join(
             self.save_dir, f"best_step{self.global_step}_epoch{self.current_epoch}_loss{current_val_loss:.4f}.pth"
         )
-        torch.save(self.model.state_dict(), archive_path)
+        # torch.save(self.model.state_dict(), archive_path)
         print(
             f"✅ New best model (val_loss={current_val_loss:.4f}) saved to:\n"
             f"  - {self.save_path} (latest best)\n"
