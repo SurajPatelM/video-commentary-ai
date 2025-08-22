@@ -6,7 +6,13 @@ import torch
 class TextDecoder(nn.Module):
     def __init__(self, decoder_name: str):
         super().__init__()
-        self.device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            device = torch.device("mps")
+        else:
+            device = torch.device("cpu")
+        self.device = torch.device(device)
         self.bart_model = BartForConditionalGeneration.from_pretrained(decoder_name).to(self.device)
         self.tokenizer = BartTokenizer.from_pretrained(decoder_name)
 

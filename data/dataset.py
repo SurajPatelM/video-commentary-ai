@@ -105,7 +105,6 @@ class VideoCaptionDatasetCSV(Dataset):
 
         # Stack images
         images_tensor = torch.stack(images)
-
         # Pad audio sequences
         max_T = max(a.shape[1] for a in audios)  # find longest time dimension
         n_mfcc = audios[0].shape[0]
@@ -118,7 +117,6 @@ class VideoCaptionDatasetCSV(Dataset):
             audio_tensor[i, :, :T] = a
             audio_lengths.append(T)
         audio_lengths = torch.tensor(audio_lengths, dtype=torch.long)
-
         return {
             "images": images_tensor,
             "captions": captions,
