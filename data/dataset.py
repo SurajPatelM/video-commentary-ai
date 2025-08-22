@@ -125,3 +125,17 @@ class VideoCaptionDatasetCSV(Dataset):
             "audio": audio_tensor,         # (B, n_mfcc, T_max)
             "audio_lengths": audio_lengths # (B,) actual lengths
         }
+        
+if __name__ == "__main__":
+    captions_dir= "/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/captions_csv"
+    frames_dir= "/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames"
+    audio_dir= "/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/mfccs"
+    dataset = VideoCaptionDatasetCSV(captions_dir=captions_dir, frames_dir=frames_dir, audio_dir=audio_dir)
+    from torch.utils.data import DataLoader
+    dataloader = DataLoader(dataset, batch_size=2, collate_fn=VideoCaptionDatasetCSV.collate_fn)
+    for batch in dataloader:
+        print(batch["images"].shape)  # Should print (B, 3, H, W)
+        print(batch["captions"])       # Should print list of captions
+        print(batch["audio"].shape)    # Should print (B, n_mfcc, T_max)
+        print(batch["audio_lengths"])   # Should print (B,) actual lengths
+        break

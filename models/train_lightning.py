@@ -12,21 +12,22 @@ class TrainerModule(L.LightningModule):
         self.save_dir = cfg.trainer.output_dir
         self.save_path = os.path.join(self.save_dir, "best_model.pth")
         os.makedirs(self.save_dir, exist_ok=True)
+        
 
-    def forward(self, images, captions):
-        return self.model(images, captions)
+    def forward(self, images, captions, audio):
+        return self.model(images, captions, audio)
 
     def training_step(self, batch, batch_idx):
-        images, captions = batch["images"], batch["captions"]
-        outputs = self(images, captions)
+        images, captions, audio = batch["images"], batch["captions"], batch["audio"]
+        outputs = self(images, captions, audio)
         loss = outputs.loss
         # log per-step, aggregate separately
         self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        images, captions = batch["images"], batch["captions"]
-        outputs = self(images, captions)
+        images, captions, audio = batch["images"], batch["captions"], batch["audio"]
+        outputs = self(images, captions, audio)
         loss = outputs.loss
         # In val loop Lightning aggregates by default on_epoch=True, but make it explicit.
         self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)

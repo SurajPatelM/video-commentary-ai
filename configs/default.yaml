@@ -14,7 +14,12 @@ vision_encoder_cfg:
   input_dim: 768     # ViT's patch embedding size
   output_dim: 1000
   freeze: false
-
+audio_encoder_cfg:
+  encoder: "cnn2d"
+  lora: false
+  input_dim: 768     # Whisper's hidden size
+  n_mfcc: 13
+  freeze: false
 fusion_cfg:
   fusion_type: concat
   input_dim: 768      # Optional: only used if projecting embeddings after concat
@@ -23,7 +28,7 @@ fusion_cfg:
 decoder_cfg:
   decoder: facebook/bart-base
   lora: true
-  input_dim: 768      # Match fusion output_dim
+  input_dim: 1536      # Match fusion output_dim
   hidden_dim: 768
   output_dim: 768
   freeze: false
