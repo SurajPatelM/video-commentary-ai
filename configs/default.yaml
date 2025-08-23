@@ -35,24 +35,26 @@ decoder_cfg:
 
 trainer:
   precision: 32
-  accelerator: mps
+  accelerator: cuda
   devices: 1
-  batch_size: 4
+  batch_size: 32
   lr: 1e-5
-  device: mps
-  epochs: 5
-  output_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/checkpoints
+  device: cuda
+  epochs: 50
+  output_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints
   max_seq_length: 128
   mlm_probability: 0.15
   save_steps: 500
   logging_steps: 100
+  log_every_n_steps: 4
+  exp_name: SwinBartAudio
 
 data:
-  captions_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/captions_csv
-  frames_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames
-  audio_dir: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/mfccs
-  batch_size: 3
-  num_workers: 4
+  captions_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/captions_csv
+  frames_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames
+  audio_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/mfccs
+  batch_size: 32
+  num_workers: 0
   pin_memory: false
   use_csv: True
 
@@ -66,4 +68,4 @@ inference:
   temperature: 1.0
   image_size: 224
   num_beams: 5
-  image_path: /Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0085.jpg
+  image_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0085.jpg

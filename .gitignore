@@ -6,6 +6,7 @@ __pycache__/
 .venv/
 env/
 *.env
+video-commentary-ai-venv
 
 # OS
 .DS_Store
@@ -29,3 +30,4 @@ caption_lora
 lightning_logs
 outputs
 checkpoints
+tensorboard_logs

@@ -6,7 +6,7 @@ import torch
 class TextDecoder(nn.Module):
     def __init__(self, decoder_name: str):
         super().__init__()
-        self.device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+        self.device = torch.device("mps" if torch.backends.mps.is_available() else "cuda")
         self.bart_model = BartForConditionalGeneration.from_pretrained(decoder_name).to(self.device)
         self.tokenizer = BartTokenizer.from_pretrained(decoder_name)
         self.projection_images_audio = nn.Linear(1536, 768)
