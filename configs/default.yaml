@@ -69,3 +69,4 @@ inference:
   image_size: 224
   num_beams: 5
   image_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0085.jpg
+  model_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints/best_model.pth

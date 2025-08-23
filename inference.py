@@ -14,7 +14,7 @@ def inference(cfg: DictConfig):
 
     # Initialize and load model
     model = SwinBart(cfg).to(device)
-    model.load_state_dict(torch.load("/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/checkpoints/best_model.pth", map_location=device))
+    model.load_state_dict(torch.load(cfg.inference.model_path, map_location=device))
     model.eval()
 
     # Image preprocessing
