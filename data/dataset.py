@@ -127,9 +127,9 @@ class VideoCaptionDatasetCSV(Dataset):
         }
         
 if __name__ == "__main__":
-    captions_dir= "/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/captions_csv"
-    frames_dir= "/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/frames"
-    audio_dir= "/Users/vishwajeethogale/Desktop/Research/video-commentary-ai/mfccs"
+    captions_dir= "/home/hov1syv/Desktop/Personal/research/video-commentary-ai/captions_csv"
+    frames_dir= "/home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames"
+    audio_dir= "/home/hov1syv/Desktop/Personal/research/video-commentary-ai/mfccs"
     dataset = VideoCaptionDatasetCSV(captions_dir=captions_dir, frames_dir=frames_dir, audio_dir=audio_dir)
     from torch.utils.data import DataLoader
     dataloader = DataLoader(dataset, batch_size=2, collate_fn=VideoCaptionDatasetCSV.collate_fn)

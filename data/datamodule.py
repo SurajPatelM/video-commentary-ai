@@ -32,6 +32,7 @@ class VideoDataModule(pl.LightningDataModule):
             batch_size=d.batch_size,
             num_workers=d.num_workers,
             pin_memory=d.pin_memory,
+            collate_fn = VideoCaptionDatasetCSV.collate_fn,
             shuffle=True,
         )
 
@@ -42,6 +43,7 @@ class VideoDataModule(pl.LightningDataModule):
             batch_size=d.batch_size,
             num_workers=d.num_workers,
             pin_memory=d.pin_memory,
+            collate_fn = VideoCaptionDatasetCSV.collate_fn,
             shuffle=False,
         )
 
