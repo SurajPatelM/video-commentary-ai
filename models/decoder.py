@@ -17,11 +17,11 @@ class TextDecoder(nn.Module):
         input_ids = tokenized.input_ids.to(self.device)
         attention_mask = tokenized.attention_mask.to(self.device)
         seq_len = input_ids.shape[1]
-        print(f"Image/Audio embeddings shape: {image_audio_embeddings.shape}")
+        # print(f"Image/Audio embeddings shape: {image_audio_embeddings.shape}")
 
         # Project image/audio embeddings to match BART's hidden size
         image_audio_embeddings = self.projection_images_audio(image_audio_embeddings)
-        print(f"Image/Audio embeddings shape: {image_audio_embeddings.shape}")
+        # print(f"Image/Audio embeddings shape: {image_audio_embeddings.shape}")
         # Repeat image embeddings to match sequence length
         repeated_embeddings = image_audio_embeddings.unsqueeze(1).repeat(1, seq_len, 1).to(self.device)
 
@@ -39,9 +39,9 @@ class TextDecoder(nn.Module):
         print(f"Input IDs shape: {input_ids.shape}")
         # BART expects `encoder_outputs` to be a model output object, not just a tuple
         # encoder_outputs = image_embeddings.unsqueeze(1).to(self.device)
-        encoder_hidden_states = self.projection_images_audio(encoder_hidden_states)
+        encoder_hidden_states = self.projection_images_audio(image_audio_embeddings)
         print(encoder_hidden_states.shape)
-        encoder_hidden_states = image_audio_embeddings.unsqueeze(1).to(self.device)
+        encoder_hidden_states = encoder_hidden_states.unsqueeze(1).to(self.device)
         encoder_outputs = BaseModelOutput(last_hidden_state=encoder_hidden_states)
         print(f"Encoder outputs shape: {encoder_hidden_states.shape}")
         
