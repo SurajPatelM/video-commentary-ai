@@ -32,7 +32,6 @@ decoder_cfg:
   hidden_dim: 768
   output_dim: 768
   freeze: false
-
 trainer:
   precision: 32
   accelerator: cuda
@@ -40,7 +39,7 @@ trainer:
   batch_size: 32
   lr: 1e-5
   device: cuda
-  epochs: 120
+  epochs: 50
   output_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints
   max_seq_length: 128
   mlm_probability: 0.15
@@ -62,13 +61,11 @@ inference:
   batch_size: 1
   num_workers: 0
   pin_memory: false
-  max_length: 80
-  top_k: 10
+  max_length: 128
+  top_k: 50
   top_p: 0.95
   temperature: 1.0
   image_size: 224
-  num_beams: 3
-  image_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0104.jpg
-  model_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints/best_model_swin_bart_audio.pth
-  video_image_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/How To Insert A Nasogastric Tube » NG Tube » Nursing Skills_clip_40.0s_to_183.0s
-  inf_save_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/video_inference/How To Insert A Nasogastric Tube » NG Tube » Nursing Skills_clip_40.0s_to_183.0s
+  num_beams: 5
+  image_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0085.jpg
+  model_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints/best_model.pth
