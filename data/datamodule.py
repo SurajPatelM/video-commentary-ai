@@ -44,7 +44,7 @@ class VideoDataModule(pl.LightningDataModule):
             num_workers=d.num_workers,
             pin_memory=d.pin_memory,
             collate_fn = VideoCaptionDatasetCSV.collate_fn,
-            shuffle=False,
+            shuffle=True,
         )
 
     def test_dataloader(self):

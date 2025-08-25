@@ -32,3 +32,4 @@ outputs
 checkpoints
 tensorboard_logs
 video_inference
+video_inference_transformer_cls
