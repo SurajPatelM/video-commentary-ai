@@ -37,7 +37,7 @@ class SwinBart(nn.Module):
         concat_features = torch.cat((image_features, audio_features), dim=1)
         normalized_features = nn.functional.normalize(concat_features, dim=1)
         generated_ids = self.decoder.generate(
-            image_audio_embeddings=concat_features,
+            image_audio_embeddings=normalized_features,
             max_length=max_length,
             num_beams=num_beams
         )
