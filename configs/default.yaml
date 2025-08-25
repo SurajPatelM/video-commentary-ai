@@ -32,7 +32,6 @@ decoder_cfg:
   hidden_dim: 768
   output_dim: 768
   freeze: false
-
 trainer:
   precision: 32
   accelerator: cuda
@@ -40,7 +39,7 @@ trainer:
   batch_size: 32
   lr: 1e-4
   device: cuda
-  epochs: 300
+  epochs: 50
   output_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints
   max_seq_length: 128
   mlm_probability: 0.15
