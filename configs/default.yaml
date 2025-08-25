@@ -15,7 +15,7 @@ vision_encoder_cfg:
   output_dim: 1000
   freeze: false
 audio_encoder_cfg:
-  encoder: "cnn2d"
+  encoder: transformer_cls
   lora: false
   input_dim: 768     # Whisper's hidden size
   n_mfcc: 13
@@ -37,7 +37,7 @@ trainer:
   accelerator: cuda
   devices: 1
   batch_size: 32
-  lr: 1e-5
+  lr: 1e-4
   device: cuda
   epochs: 50
   output_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints
@@ -62,10 +62,13 @@ inference:
   num_workers: 0
   pin_memory: false
   max_length: 128
-  top_k: 50
+  top_k: 10
   top_p: 0.95
   temperature: 1.0
   image_size: 224
-  num_beams: 5
-  image_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/Nasogastric tube insertion_clip_0.0s_to_175.0s/frame_0085.jpg
+  num_beams: 2
+  image_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/How To Insert A Nasogastric Tube » NG Tube » Nursing Skills_clip_40.0s_to_183.0s/frame_0001.jpg
   model_path: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/checkpoints/best_model.pth
+  video_image_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/frames/How To Insert A Nasogastric Tube » NG Tube » Nursing Skills_clip_40.0s_to_183.0s
+  inf_save_dir: /home/hov1syv/Desktop/Personal/research/video-commentary-ai/video_inference_transformer_cls/How To Insert A Nasogastric Tube » NG Tube » Nursing Skills_clip_40.0s_to_183.0s
+  
